@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<array>
+	<dict>
+		<key>title</key>
+		<string>首页</string>
+		<key>image</key>
+		<string>home_normal</string>
+		<key>selectedImage</key>
+		<string>home_seleted</string>
+		<key>vcName</key>
+		<string>MSViewController1</string>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>账户</string>
+		<key>image</key>
+		<string>account_normal</string>
+		<key>selectedImage</key>
+		<string>account_seleted</string>
+		<key>vcName</key>
+		<string>MSViewController2</string>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>投资</string>
+		<key>image</key>
+		<string>invest_normal</string>
+		<key>selectedImage</key>
+		<string>invest_seleted</string>
+		<key>vcName</key>
+		<string>MSViewController3</string>
+	</dict>
+	<dict>
+		<key>title</key>
+		<string>更多</string>
+		<key>image</key>
+		<string>more_normal</string>
+		<key>selectedImage</key>
+		<string>more_seleted</string>
+		<key>vcName</key>
+		<string>MSViewController4</string>
+	</dict>
+</array>
+</plist>

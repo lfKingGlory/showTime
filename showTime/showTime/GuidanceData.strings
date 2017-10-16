@@ -1,0 +1,19 @@
+/* 
+  GuidanceData.strings
+  showTime
+
+  Created by msj on 16/8/18.
+  Copyright © 2016年 msj. All rights reserved.
+*/
+
+"MSViewController1_4" = "home_4_1";
+"MSViewController1_5" = "home_5_1,home_5_2";
+"MSViewController1_6" = "home_6_1,home_6_2";
+"MSViewController1_6p" = "home_6p_1,home_6p_2";
+
+
+
+"MSViewController2_4" = "home_4_1";
+"MSViewController2_5" = "home_5_1";
+"MSViewController2_6" = "home_6_1";
+"MSViewController2_6p" = "home_6p_1";
