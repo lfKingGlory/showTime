@@ -46,16 +46,26 @@
 - (CGFloat)rowMargin
 {
     if ([self.delegate respondsToSelector:@selector(rowMarginInBBMCollectionViewWaterLayout:)]) {
-        return [self.delegate rowMarginInBBMCollectionViewWaterLayout:self];
+        CGFloat rowMargin = [self.delegate rowMarginInBBMCollectionViewWaterLayout:self];
+        if (rowMargin > 0) {
+            return rowMargin;
+        } else {
+            return WaterLayoutRowMargin;
+        }
     }else{
         return WaterLayoutRowMargin;
     }
 }
 
--(CGFloat)columnMargin
+- (CGFloat)columnMargin
 {
     if ([self.delegate respondsToSelector:@selector(columMarginInBBMCollectionViewWaterLayout:)]) {
-        return [self.delegate columMarginInBBMCollectionViewWaterLayout:self];
+        CGFloat columnMargin = [self.delegate columMarginInBBMCollectionViewWaterLayout:self];
+        if (columnMargin > 0) {
+            return columnMargin;
+        } else {
+            return WaterLayoutColumnMargin;
+        }
     }else{
         return WaterLayoutColumnMargin;
     }
@@ -64,7 +74,12 @@
 - (NSInteger)columnNumbers
 {
     if ([self.delegate respondsToSelector:@selector(columnNumbersInBBMCollectionViewWaterLayout:)]) {
-        return [self.delegate columnNumbersInBBMCollectionViewWaterLayout:self];
+        NSInteger columnNumbers =  [self.delegate columnNumbersInBBMCollectionViewWaterLayout:self];
+        if (columnNumbers > 0) {
+            return columnNumbers;
+        } else {
+            return WaterLayoutColumnNumbers;
+        }
     }else{
         return WaterLayoutColumnNumbers;
     }

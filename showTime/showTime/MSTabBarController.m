@@ -50,6 +50,7 @@
     
 //    self.delegate = self;
 //    [self setValue:[[MSTabBar alloc] init] forKeyPath:@"tabBar"];
+    [UITabBar appearance].itemPositioning = UITabBarItemPositioningCentered;
 }
 
 - (void)addViewController:(UIViewController *)viewController image:(NSString *)image seletedImage:(NSString *)seletedImage title:(NSString *)title
@@ -61,40 +62,47 @@
     [self addChildViewController:nav];
 }
 
-//- (void)tabBar:(UITabBar *)tabBar didSelectItem:(UITabBarItem *)item {
+- (void)tabBar:(UITabBar *)tabBar didSelectItem:(UITabBarItem *)item {
 
-//    NSInteger index = [self.tabBar.items indexOfObject:item];
+    NSInteger index = [self.tabBar.items indexOfObject:item];
     
-//    if (self.indexFlag != index) {
-//        [self animationWithIndex:index];
-//    }
+    if (self.indexFlag != index) {
+        [self animationWithIndex:index];
+    }
     
-//    MSViewController4 *v4 = [[MSViewController4 alloc] init];
-//    [self addViewController:v4 image:@"more_normal" seletedImage:@"more_seleted" title:@"更多"];
-//    
-//    NSLog(@"%lu====",self.tabBar.items.count);
-//    
-//    [self.tabBar layoutIfNeeded];
-//}
-// 动画
-//- (void)animationWithIndex:(NSInteger) index {
-//    
-//    self.indexFlag = index;
-//    
-//    NSMutableArray * tabbarbuttonArray = [NSMutableArray array];
-//    for (UIView *tabBarButton in self.tabBar.subviews) {
-//        if ([tabBarButton isKindOfClass:NSClassFromString(@"UITabBarButton")]) {
-//            [tabbarbuttonArray addObject:tabBarButton];
-//        }
-//    }
-//    CABasicAnimation*pulse = [CABasicAnimation animationWithKeyPath:@"transform.scale"];
-//    pulse.duration = 0.15;
-//    pulse.repeatCount= 1;
-//    pulse.autoreverses= YES;
-//    pulse.fromValue= [NSNumber numberWithFloat:0.7];
-//    pulse.toValue= [NSNumber numberWithFloat:1.3];
-//    [[tabbarbuttonArray[index] layer]
-//     addAnimation:pulse forKey:nil];
-//}
+    MSViewController4 *v4 = [[MSViewController4 alloc] init];
+    [self addViewController:v4 image:@"more_normal" seletedImage:@"more_seleted" title:@"更多"];
+    
+    NSLog(@"%lu====",self.tabBar.items.count);
+    
+    [self.tabBar layoutIfNeeded];
+}
+
+- (void)animationWithIndex:(NSInteger) index {
+    
+    self.indexFlag = index;
+    
+    NSMutableArray * tabbarbuttonArray = [NSMutableArray array];
+    for (UIView *tabBarButton in self.tabBar.subviews) {
+        if ([tabBarButton isKindOfClass:NSClassFromString(@"UITabBarButton")]) {
+            
+            for (UIView *sb in tabBarButton.subviews) {
+                if ([sb isKindOfClass:NSClassFromString(@"UITabBarSwappableImageView")]) {
+                    [tabbarbuttonArray addObject:sb];
+                }
+            }
+            
+            
+        }
+    }
+    CABasicAnimation*pulse = [CABasicAnimation animationWithKeyPath:@"transform.scale"];
+    pulse.duration = 0.15;
+    pulse.repeatCount= 1;
+    pulse.autoreverses= YES;
+    pulse.fromValue= [NSNumber numberWithFloat:0.8];
+    pulse.toValue= [NSNumber numberWithFloat:1.2];
+    [[tabbarbuttonArray[index] layer]
+     addAnimation:pulse forKey:nil];
+}
 
 @end
