@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @interface MSScanSurfaceView : UIView
-@property(nonatomic,assign,readonly)CGRect scanRect;
+@property(nonatomic, assign, readonly)CGRect scanRect;
 - (void)startAnimation;
 - (void)stopAnimation;
 @end

@@ -23,6 +23,37 @@
 @end
 
 @implementation MSScanSurfaceView
+
+#pragma mark - Public
+- (void)startAnimation {
+    CAAnimation *animation = [self.scanImageView animationForKey:@"ms_scan"];
+    if (animation) {
+        return;
+    }
+    
+    CABasicAnimation *basicAnimation = [CABasicAnimation animationWithKeyPath:@"transform.translation.y"];
+    basicAnimation.fromValue = @(0);
+    basicAnimation.toValue = @(CGRectGetHeight(self.cornersImageView.frame));
+    basicAnimation.duration = 1.6;
+    basicAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+    basicAnimation.removedOnCompletion = NO;
+    basicAnimation.fillMode = kCAFillModeForwards;
+    
+    CAAnimationGroup *group = [CAAnimationGroup animation];
+    group.animations = @[basicAnimation];
+    group.repeatCount = CGFLOAT_MAX;
+    group.duration = 1.8;
+    [self.scanImageView addAnimation:group forKey:@"ms_scan"];
+}
+
+- (void)stopAnimation {
+    CAAnimation *animation = [self.scanImageView animationForKey:@"ms_scan"];
+    if (animation) {
+        [self.scanImageView removeAnimationForKey:@"ms_scan"];
+    }
+}
+
+#pragma mark - Pravite
 - (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
@@ -63,33 +94,13 @@
     UIView *bottomView = [[UIView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(self.cornersImageView.frame), screenWidth, sacnRect_y)];
     bottomView.backgroundColor = back_color;
     [self addSubview:bottomView];
-}
-
-- (void)startAnimation {
-    CAAnimation *animation = [self.scanImageView animationForKey:@"ms_scan"];
-    if (animation) {
-        return;
-    }
     
-    CABasicAnimation *basicAnimation = [CABasicAnimation animationWithKeyPath:@"transform.translation.y"];
-    basicAnimation.fromValue = @(0);
-    basicAnimation.toValue = @(CGRectGetHeight(self.cornersImageView.frame));
-    basicAnimation.duration = 1.6;
-    basicAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
-    basicAnimation.removedOnCompletion = NO;
-    basicAnimation.fillMode = kCAFillModeForwards;
-    
-    CAAnimationGroup *group = [CAAnimationGroup animation];
-    group.animations = @[basicAnimation];
-    group.repeatCount = CGFLOAT_MAX;
-    group.duration = 1.75;
-    [self.scanImageView addAnimation:group forKey:@"ms_scan"];
-}
+    UILabel *lbTips = [[UILabel alloc] initWithFrame:CGRectMake(0, 20, screenWidth, 30)];
+    lbTips.textAlignment = NSTextAlignmentCenter;
+    lbTips.font = [UIFont fontWithName:@"Heiti SC" size:13];
+    lbTips.textColor = [UIColor whiteColor];
+    lbTips.text = @"将二维码放入框内，即可自动扫描";
+    [bottomView addSubview:lbTips];
 
-- (void)stopAnimation {
-    CAAnimation *animation = [self.scanImageView animationForKey:@"ms_scan"];
-    if (animation) {
-        [self.scanImageView removeAnimationForKey:@"ms_scan"];
-    }
 }
 @end

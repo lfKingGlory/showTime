@@ -35,11 +35,19 @@
         });
     };
     [self.view addSubview:self.scanCodeView];
-    [self.scanCodeView ms_startScan];
-    
     
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"从相册获取" style:UIBarButtonItemStylePlain target:self action:@selector(tap)];
     
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [self.scanCodeView ms_startScan];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    [self.scanCodeView ms_stopScan];
 }
 
 - (void)tap {
