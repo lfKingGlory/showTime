@@ -7,14 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <AVFoundation/AVFoundation.h>
 
-@protocol MSScanCodeViewDelegate <NSObject>
--(void)ms_scanCodeViewCompleteCallBack:(NSString *)stringValue;
-@end
-
-@interface MSScanCodeView : UIView<AVCaptureMetadataOutputObjectsDelegate>
-@property(nonatomic,assign)id<MSScanCodeViewDelegate> scanDelegate;
+@interface MSScanCodeView : UIView
+@property (copy, nonatomic) void (^scanCompletionCallBack)(NSString *stringValue);
 - (void)ms_startScan;
 - (void)ms_stopScan;
 @end

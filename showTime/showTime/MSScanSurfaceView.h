@@ -9,13 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @interface MSScanSurfaceView : UIView
-{
-    CALayer *baselineLayer;
-    BOOL isAnimation;
-}
-
-@property(nonatomic,assign)CGRect scanRect;
-
--(void)startBaseLineAnimation;
--(void)stopBaseLineAnimation;
+@property(nonatomic,assign,readonly)CGRect scanRect;
+- (void)startAnimation;
+- (void)stopAnimation;
 @end

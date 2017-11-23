@@ -12,7 +12,7 @@
 #import "MSViewController5.h"
 #import "UINavigationController+removeAtIndex.h"
 
-@interface MSScanViewcontroller ()<MSScanCodeViewDelegate,UINavigationControllerDelegate,UIImagePickerControllerDelegate>
+@interface MSScanViewcontroller ()<UINavigationControllerDelegate,UIImagePickerControllerDelegate>
 @property (strong, nonatomic) MSScanCodeView *scanCodeView;
 @end
 
@@ -22,8 +22,19 @@
     [super viewDidLoad];
     
     self.scanCodeView = [[MSScanCodeView alloc] initWithFrame:self.view.bounds];
+    __weak typeof(self) weakSelf = self;
+    self.scanCodeView.scanCompletionCallBack = ^(NSString *stringValue) {
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        NSLog(@"%@",stringValue);
+        MSViewController5 *v = [[MSViewController5 alloc] init];
+        v.message = stringValue;
+        [strongSelf.navigationController pushViewController:v animated:YES];
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [strongSelf.navigationController removeViewcontrollerAtIndex:strongSelf.navigationController.viewControllers.count - 2];
+        });
+    };
     [self.view addSubview:self.scanCodeView];
-    self.scanCodeView.scanDelegate = self;
     [self.scanCodeView ms_startScan];
     
     
@@ -63,7 +74,7 @@
     if (!image) {
         image = info[UIImagePickerControllerOriginalImage];
     }
-    CIDetector*detector = [CIDetector detectorOfType:CIDetectorTypeQRCode context:nil options:@{ CIDetectorAccuracy : CIDetectorAccuracyHigh }];
+    CIDetector *detector = [CIDetector detectorOfType:CIDetectorTypeQRCode context:nil options:@{ CIDetectorAccuracy : CIDetectorAccuracyHigh }];
     
     [picker dismissViewControllerAnimated:YES completion:^{
         
@@ -71,6 +82,7 @@
         if (features.count > 0) {
             CIQRCodeFeature *feature = [features objectAtIndex:0];
             NSString *scannedResult = feature.messageString;
+            
             MSViewController5 *v = [[MSViewController5 alloc] init];
             v.message = scannedResult;
             [self.navigationController pushViewController:v animated:YES];
@@ -83,18 +95,6 @@
             
         }
     }];
-    
-}
-
--(void)ms_scanCodeViewCompleteCallBack:(NSString *)stringValue
-{
-    NSLog(@"%@",stringValue);
-    MSViewController5 *v = [[MSViewController5 alloc] init];
-    v.message = stringValue;
-    [self.navigationController pushViewController:v animated:YES];
-
-    [self.navigationController removeViewcontrollerAtIndex:self.navigationController.viewControllers.count - 2];
-
     
 }
 @end
