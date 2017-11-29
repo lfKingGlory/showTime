@@ -90,6 +90,7 @@
 		6A759CAB1E271120001876B1 /* MSRefreshHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A759CAA1E271120001876B1 /* MSRefreshHeader.m */; };
 		6A7D3AA71E1607F900D3C03A /* MSAlertController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A7D3AA61E1607F900D3C03A /* MSAlertController.m */; };
 		6A84BEC11F94773800FA2585 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A84BEC01F94773700FA2585 /* AudioToolbox.framework */; };
+		6A8A60B51FCE91BA006E32A7 /* NSDictionary+SetNullToString.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A8A60B41FCE91BA006E32A7 /* NSDictionary+SetNullToString.m */; };
 		6A8B8E951E08BB72007D0F41 /* MSPinView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A8B8E941E08BB72007D0F41 /* MSPinView.m */; };
 		6A966AF51EC95A6E00E0358E /* MSPageStateMachine.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A966AF41EC95A6E00E0358E /* MSPageStateMachine.m */; };
 		6A966AF81EC95ACF00E0358E /* MSPageStateView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A966AF71EC95ACF00E0358E /* MSPageStateView.m */; };
@@ -403,6 +404,8 @@
 		6A7D3AA51E1607F900D3C03A /* MSAlertController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSAlertController.h; sourceTree = "<group>"; };
 		6A7D3AA61E1607F900D3C03A /* MSAlertController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSAlertController.m; sourceTree = "<group>"; };
 		6A84BEC01F94773700FA2585 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		6A8A60B31FCE91BA006E32A7 /* NSDictionary+SetNullToString.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+SetNullToString.h"; sourceTree = "<group>"; };
+		6A8A60B41FCE91BA006E32A7 /* NSDictionary+SetNullToString.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+SetNullToString.m"; sourceTree = "<group>"; };
 		6A8B8E931E08BB72007D0F41 /* MSPinView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSPinView.h; sourceTree = "<group>"; };
 		6A8B8E941E08BB72007D0F41 /* MSPinView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSPinView.m; sourceTree = "<group>"; };
 		6A966AF21EC94CBB00E0358E /* MSPageStateMachineConst.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MSPageStateMachineConst.h; sourceTree = "<group>"; };
@@ -1343,6 +1346,8 @@
 				6A0631481DC6F6FD00B33A05 /* UIDevice+Add.m */,
 				6A6B01171E81083B004824D5 /* UINavigationController+removeAtIndex.h */,
 				6A6B01181E81083B004824D5 /* UINavigationController+removeAtIndex.m */,
+				6A8A60B31FCE91BA006E32A7 /* NSDictionary+SetNullToString.h */,
+				6A8A60B41FCE91BA006E32A7 /* NSDictionary+SetNullToString.m */,
 			);
 			name = category;
 			sourceTree = "<group>";
@@ -1645,6 +1650,7 @@
 				6A26812A1E1F453900C4E3C7 /* UIControl+YYAdd.m in Sources */,
 				6AE9E99D1D6E865500100729 /* SDWebImageManager.m in Sources */,
 				6A4502181E45BF1500272499 /* MSChanneiModel.m in Sources */,
+				6A8A60B51FCE91BA006E32A7 /* NSDictionary+SetNullToString.m in Sources */,
 				6A14FAE01D7D759300ADEA1D /* NSArray+PureLayout.m in Sources */,
 				6AE9E86F1D657DDF00100729 /* main.m in Sources */,
 				6A6703811DD07EDC001264AE /* POPAnimatableProperty.mm in Sources */,

@@ -18,7 +18,6 @@
 @property (strong,nonatomic)AVCaptureVideoPreviewLayer *preview;
 
 @property (strong, nonatomic) MSScanSurfaceView *surfaceView;
-
 @end
 
 @implementation MSScanCodeView
