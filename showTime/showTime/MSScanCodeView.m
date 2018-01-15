@@ -22,6 +22,23 @@
 
 @implementation MSScanCodeView
 
+#pragma mark - Life
+- (instancetype)initWithFrame:(CGRect)frame {
+    self = [super initWithFrame:frame];
+    if (self) {
+        [self setupScanner];
+        [self addSurfaceView];
+        [self addNotification];
+    }
+    return self;
+}
+
+- (void)dealloc {
+    NSLog(@"%s",__func__);
+    [self ms_stopScan];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 #pragma mark - Public
 - (void)ms_startScan {
     if (!self.session.isRunning) {
@@ -51,17 +68,21 @@
     [self ms_startScan];
 }
 
-#pragma mark - Private
-- (instancetype)initWithFrame:(CGRect)frame {
-    self = [super initWithFrame:frame];
-    if (self) {
-        [self setupScanner];
-        [self addSurfaceView];
-        [self addNotification];
+#pragma mark - AVCaptureMetadataOutputObjectsDelegate
+- (void)captureOutput:(AVCaptureOutput *)captureOutput didOutputMetadataObjects:(NSArray *)metadataObjects fromConnection:(AVCaptureConnection *)connection {
+    NSString *stringValue = nil;
+    if (metadataObjects.count > 0){
+        AVMetadataMachineReadableCodeObject * metadataObject = [metadataObjects objectAtIndex:0];
+        stringValue = metadataObject.stringValue;
     }
-    return self;
+    [self ms_stopScan];
+    if (self.scanCompletionCallBack) {
+        self.scanCompletionCallBack(stringValue);
+    }
+    
 }
 
+#pragma mark - Private
 - (void)setupScanner {
     self.device = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
     self.input = [AVCaptureDeviceInput deviceInputWithDevice:self.device error:nil];
@@ -97,26 +118,6 @@
     self.surfaceView = [[MSScanSurfaceView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height)];
     self.output.rectOfInterest = self.surfaceView.scanRect;
     [self addSubview:self.surfaceView];
-}
-
-- (void)dealloc {
-    NSLog(@"%s",__func__);
-    [self ms_stopScan];
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-}
-
-#pragma mark AVCaptureMetadataOutputObjectsDelegate
-- (void)captureOutput:(AVCaptureOutput *)captureOutput didOutputMetadataObjects:(NSArray *)metadataObjects fromConnection:(AVCaptureConnection *)connection {
-    NSString *stringValue = nil;
-    if (metadataObjects.count > 0){
-        AVMetadataMachineReadableCodeObject * metadataObject = [metadataObjects objectAtIndex:0];
-        stringValue = metadataObject.stringValue;
-    }
-    [self ms_stopScan];
-    if (self.scanCompletionCallBack) {
-        self.scanCompletionCallBack(stringValue);
-    }
-    
 }
 
 @end

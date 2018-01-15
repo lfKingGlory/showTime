@@ -9,13 +9,13 @@
 #import "MSScanSurfaceView.h"
 #import <AVFoundation/AVFoundation.h>
 
-#define screenHeight            [UIScreen mainScreen].bounds.size.height
-#define screenWidth             [UIScreen mainScreen].bounds.size.width
-#define sacnRect_width          (screenWidth * 10.0 / 16.0)
-#define sacnRect_height         sacnRect_width
-#define sacnRect_x              (screenWidth - sacnRect_width) / 2
-#define sacnRect_y              (screenHeight - sacnRect_height) / 2
-#define back_color              [UIColor colorWithRed:0 green:0 blue:0 alpha:0.6]
+#define screen_Height            [UIScreen mainScreen].bounds.size.height
+#define screen_Width             [UIScreen mainScreen].bounds.size.width
+#define sacnRect_width           (screen_Width * 10.0 / 16.0)
+#define sacnRect_height          sacnRect_width
+#define sacnRect_x               (screen_Width - sacnRect_width) / 2
+#define sacnRect_y               (screen_Height - sacnRect_height) / 2
+#define back_color               [UIColor colorWithRed:0 green:0 blue:0 alpha:0.6]
 
 @interface MSScanSurfaceView ()
 @property (strong, nonatomic) UIImageView *cornersImageView;
@@ -64,7 +64,7 @@
 
 - (void)addSubviews {
     
-    _scanRect = CGRectMake(sacnRect_y / screenHeight, sacnRect_x / screenWidth, sacnRect_height / screenHeight, sacnRect_width / screenWidth);
+    _scanRect = CGRectMake(sacnRect_y / screen_Height, sacnRect_x / screen_Width, sacnRect_height / screen_Height, sacnRect_width / screen_Width);
     
     self.cornersImageView = [[UIImageView alloc] initWithFrame:CGRectMake(sacnRect_x, sacnRect_y, sacnRect_width, sacnRect_height)];
     self.cornersImageView.backgroundColor = [UIColor clearColor];
@@ -79,7 +79,7 @@
     self.scanImageView.contents = (id)scanImage.CGImage;
     [self.cornersImageView.layer addSublayer:self.scanImageView];
     
-    UIView *topView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, screenWidth, sacnRect_y)];
+    UIView *topView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, screen_Width, sacnRect_y)];
     topView.backgroundColor = back_color;
     [self addSubview:topView];
     
@@ -91,11 +91,11 @@
     rightView.backgroundColor = back_color;
     [self addSubview:rightView];
     
-    UIView *bottomView = [[UIView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(self.cornersImageView.frame), screenWidth, sacnRect_y)];
+    UIView *bottomView = [[UIView alloc] initWithFrame:CGRectMake(0, CGRectGetMaxY(self.cornersImageView.frame), screen_Width, sacnRect_y)];
     bottomView.backgroundColor = back_color;
     [self addSubview:bottomView];
     
-    UILabel *lbTips = [[UILabel alloc] initWithFrame:CGRectMake(0, 20, screenWidth, 30)];
+    UILabel *lbTips = [[UILabel alloc] initWithFrame:CGRectMake(0, 20, screen_Width, 30)];
     lbTips.textAlignment = NSTextAlignmentCenter;
     lbTips.font = [UIFont fontWithName:@"Heiti SC" size:13];
     lbTips.textColor = [UIColor whiteColor];
