@@ -22,6 +22,12 @@
 #import "MSRefreshHeader.h"
 #import "MSSignal.h"
 
+typedef NS_ENUM(NSInteger, CameraStatus) {
+    CameraStatusNotDetermined,  // 未进行授权操作（需要主动发起授权）
+    CameraStatusAuthorized,     // 已授权
+    CameraStatusDenied          // 已拒绝
+};
+
 #define RGB(r,g,b,a)  [UIColor colorWithRed:r/256.0 green:g/256.0 blue:b/256.0 alpha:a]
 
 @interface MSViewController1 ()<UITableViewDelegate, UITableViewDataSource>
@@ -46,6 +52,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    
     
     {
         NSTimeInterval interval1 = 100;
@@ -94,7 +102,7 @@
     self.tableView.delegate = self.otherDelegate;
     self.tableView.dataSource = self;
     self.tableView.rowHeight = 50;
-    [self.view addSubview:self.tableView];
+//    [self.view addSubview:self.tableView];
     
     MSIndicator *indicator = [[MSIndicator alloc] initWithFrame:CGRectMake(0, 100, 100, 100)];
     indicator.backgroundColor = [UIColor redColor];
@@ -161,6 +169,70 @@
     
 }
 
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    switch ([self getCameraStatus]) {
+        case CameraStatusAuthorized:
+        {
+            MSScanViewcontroller *scanVC = [[MSScanViewcontroller alloc] init];
+            [self.navigationController pushViewController:scanVC animated:YES];
+            break;
+        }
+        case CameraStatusNotDetermined:
+        {
+            [self requestAccessForCameraStatusSuccess:^{
+                MSScanViewcontroller *scanVC = [[MSScanViewcontroller alloc] init];
+                [self.navigationController pushViewController:scanVC animated:YES];
+            } failure:^{
+                [self showAlertView];
+            }];
+            break;
+        }
+        case CameraStatusDenied:
+        default:
+        {
+            [self showAlertView];
+            break;
+        }
+    }
+}
+
+- (CameraStatus)getCameraStatus {
+    AVAuthorizationStatus status = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
+    if (status == AVAuthorizationStatusAuthorized) {
+        return CameraStatusAuthorized;
+    } else if (status == AVAuthorizationStatusNotDetermined) {
+        return CameraStatusNotDetermined;
+    } else {
+        return CameraStatusDenied;
+    }
+}
+
+- (void)requestAccessForCameraStatusSuccess:(void (^)(void))success failure:(void (^)(void))failure {
+    [AVCaptureDevice requestAccessForMediaType:AVMediaTypeVideo completionHandler:^(BOOL granted) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (granted) {
+                if (success) {
+                    success();
+                }
+            } else {
+                if (failure) {
+                    failure();
+                }
+            }
+        });
+    }];
+}
+
+
+- (void)showAlertView {
+    UIAlertController * alert = [UIAlertController alertControllerWithTitle:@"提示" message:@"请在iPhone的'设置-隐私-相机'选项中,允许APP访问你的相机" preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction * action = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
+    }];
+    [alert addAction:action];
+    [self presentViewController:alert animated:YES completion:nil];
+}
+
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
@@ -203,20 +275,35 @@
 {
     if (indexPath.row % 2 == 0) {
         
+//        [AVCaptureDevice requestAccessForMediaType:AVMediaTypeVideo completionHandler:^(BOOL granted) {
+//            if (granted) {
+//                MSScanViewcontroller *scanVC = [[MSScanViewcontroller alloc] init];
+//                [self.navigationController pushViewController:scanVC animated:YES];
+//            } else {
+//                UIAlertController * alert = [UIAlertController alertControllerWithTitle:@"提示" message:@"请在iPhone的'设置-隐私-相机'选项中,允许APP访问你的相机" preferredStyle:UIAlertControllerStyleAlert];
+//                UIAlertAction * action = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+//                    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
+//                }];
+//                [alert addAction:action];
+//
+//                [self presentViewController:alert animated:YES completion:nil];
+//            }
+//        }];
         
-        if ([MSAssetUtil isCameraAuthority]) {
-            
-            MSScanViewcontroller *scanVC = [[MSScanViewcontroller alloc] init];
-            [self.navigationController pushViewController:scanVC animated:YES];
-        }else{
-            UIAlertController * alert = [UIAlertController alertControllerWithTitle:@"提示" message:@"请在iPhone的'设置-隐私-相机'选项中,允许APP访问你的相机" preferredStyle:UIAlertControllerStyleAlert];
-            UIAlertAction * action = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-                [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
-            }];
-            [alert addAction:action];
-            
-            [self presentViewController:alert animated:YES completion:nil];
-        }
+        
+//        if ([MSAssetUtil isCameraAuthority]) {
+//
+//            MSScanViewcontroller *scanVC = [[MSScanViewcontroller alloc] init];
+//            [self.navigationController pushViewController:scanVC animated:YES];
+//        }else{
+//            UIAlertController * alert = [UIAlertController alertControllerWithTitle:@"提示" message:@"请在iPhone的'设置-隐私-相机'选项中,允许APP访问你的相机" preferredStyle:UIAlertControllerStyleAlert];
+//            UIAlertAction * action = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+//                [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
+//            }];
+//            [alert addAction:action];
+//
+//            [self presentViewController:alert animated:YES completion:nil];
+//        }
     }else{
         MSViewController4 *v = [[MSViewController4 alloc] init];
         //    v.fd_interactivePopDisabled = YES;
