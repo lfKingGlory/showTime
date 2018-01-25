@@ -28,7 +28,7 @@
 - (instancetype)initWithFrame:(CGRect)frame
 {
     if (self = [super initWithFrame:frame]) {
-        self.backgroundColor = [UIColor blackColor];
+        self.backgroundColor = [UIColor clearColor];
         self.hasLoadedImage = NO;
         self.beginLoadingImage = NO;
         [self addSubviews];
@@ -41,7 +41,7 @@
 - (void)addSubviews
 {
     self.scrollView = [[UIScrollView alloc] initWithFrame:self.bounds];
-    self.scrollView.backgroundColor = [UIColor blackColor];
+    self.scrollView.backgroundColor = [UIColor clearColor];
     self.scrollView.showsHorizontalScrollIndicator = NO;
     self.scrollView.delegate = self;
     self.scrollView.maximumZoomScale = 2;
@@ -169,8 +169,6 @@
         self.singleTapBlock(recognizer);
     }
 }
-
-
 
 #pragma mark UIScrollViewDelegate
 - (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView

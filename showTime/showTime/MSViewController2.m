@@ -140,51 +140,28 @@
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
 {
     
-//    MSPhotoController *vc = [[MSPhotoController alloc] init];
-//    vc.type = MSPhotoController_present;
-//    NSMutableArray *arr = [NSMutableArray array];
-//    for (int i = 0; i < self.srcStringArray.count; i++) {
-//        MSPhotoItem *item = [[MSPhotoItem alloc] init];
-//        item.thumbnail_pic = self.srcStringArray[i];
-//        [arr addObject:item];
-//    }
-//    vc.photoItems = arr;
-//    vc.currentIndex = 3;
-//    /*
-//     UIModalPresentationFullScreen = 0,
-//     UIModalPresentationPageSheet NS_ENUM_AVAILABLE_IOS(3_2) __TVOS_PROHIBITED,
-//     UIModalPresentationFormSheet NS_ENUM_AVAILABLE_IOS(3_2) __TVOS_PROHIBITED,
-//     UIModalPresentationCurrentContext NS_ENUM_AVAILABLE_IOS(3_2),
-//     UIModalPresentationCustom NS_ENUM_AVAILABLE_IOS(7_0),
-//     UIModalPresentationOverFullScreen NS_ENUM_AVAILABLE_IOS(8_0),
-//     UIModalPresentationOverCurrentContext NS_ENUM_AVAILABLE_IOS(8_0),
-//     UIModalPresentationPopover NS_ENUM_AVAILABLE_IOS(8_0) __TVOS_PROHIBITED,
-//     UIModalPresentationNone NS_ENUM_AVAILABLE_IOS(7_0) = -1,
-//
-//
-//
-//
-//     UIModalTransitionStyleCoverVertical = 0,
-//     UIModalTransitionStyleFlipHorizontal __TVOS_PROHIBITED,
-//     UIModalTransitionStyleCrossDissolve,
-//     UIModalTransitionStylePartialCurl NS_ENUM_AVAILABLE_IOS(3_2) __TVOS_PROHIBITED,
-//     */
-//    vc.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
-//    [self.navigationController presentViewController:vc animated:YES completion:^{
-//
-//    }];
-//
-//    if (!self.time) {
-//        self.loadingView.alpha = 1;
-//        self.loadingView1.alpha = 1;
-//        [self start];
-//    }
-//
-//
-//    self.statusBarStyleControl = !self.statusBarStyleControl;
-//    if ([self respondsToSelector:@selector(setNeedsStatusBarAppearanceUpdate)]) {
-//        [self setNeedsStatusBarAppearanceUpdate];
-//    }
+    MSPhotoController *vc = [[MSPhotoController alloc] initWithFrame:[UIScreen mainScreen].bounds];
+    NSMutableArray *arr = [NSMutableArray array];
+    for (int i = 0; i < self.srcStringArray.count; i++) {
+        MSPhotoItem *item = [[MSPhotoItem alloc] init];
+        item.thumbnail_pic = self.srcStringArray[i];
+        [arr addObject:item];
+    }
+    vc.photoItems = arr;
+    vc.currentIndex = 3;
+    [[UIApplication sharedApplication].delegate.window addSubview:vc];
+
+    if (!self.time) {
+        self.loadingView.alpha = 1;
+        self.loadingView1.alpha = 1;
+        [self start];
+    }
+
+
+    self.statusBarStyleControl = !self.statusBarStyleControl;
+    if ([self respondsToSelector:@selector(setNeedsStatusBarAppearanceUpdate)]) {
+        [self setNeedsStatusBarAppearanceUpdate];
+    }
 }
 
 - (void)ms_gestureView:(MSGestureView *)gestureView didSelectedPassword:(NSString *)passWord

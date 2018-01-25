@@ -75,30 +75,30 @@
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    MSPhotoController *vc = [[MSPhotoController alloc] init];
-    vc.type = MSPhotoController_present;
-    NSMutableArray *arr = [NSMutableArray array];
-    for (int i = 0; i < self.dataArr.count; i++) {
-        MSPhotoItem *item = [[MSPhotoItem alloc] init];
-        MSGoodsModel *model = self.dataArr[i];
-        item.thumbnail_pic = model.img;
-        [arr addObject:item];
-    }
-    vc.photoItems = arr;
-    vc.currentIndex = (int)indexPath.item;
-    
-    
-    /*
-     
-     UIModalTransitionStyleCoverVertical = 0,
-     UIModalTransitionStyleFlipHorizontal __TVOS_PROHIBITED,
-     UIModalTransitionStyleCrossDissolve,
-     UIModalTransitionStylePartialCurl NS_ENUM_AVAILABLE_IOS(3_2) __TVOS_PROHIBITED,
-     */
-    vc.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-    [self.navigationController presentViewController:vc animated:YES completion:^{
-        
-    }];
+//    MSPhotoController *vc = [[MSPhotoController alloc] init];
+//    vc.type = MSPhotoController_present;
+//    NSMutableArray *arr = [NSMutableArray array];
+//    for (int i = 0; i < self.dataArr.count; i++) {
+//        MSPhotoItem *item = [[MSPhotoItem alloc] init];
+//        MSGoodsModel *model = self.dataArr[i];
+//        item.thumbnail_pic = model.img;
+//        [arr addObject:item];
+//    }
+//    vc.photoItems = arr;
+//    vc.currentIndex = (int)indexPath.item;
+//    
+//    
+//    /*
+//     
+//     UIModalTransitionStyleCoverVertical = 0,
+//     UIModalTransitionStyleFlipHorizontal __TVOS_PROHIBITED,
+//     UIModalTransitionStyleCrossDissolve,
+//     UIModalTransitionStylePartialCurl NS_ENUM_AVAILABLE_IOS(3_2) __TVOS_PROHIBITED,
+//     */
+//    vc.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+//    [self.navigationController presentViewController:vc animated:YES completion:^{
+//        
+//    }];
 }
 
 #pragma mark - BBMCollectionViewWaterLayoutDelegate

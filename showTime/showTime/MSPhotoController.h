@@ -7,17 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
-
-typedef NS_ENUM(NSInteger, MSPhotoControllerType) {
-    MSPhotoController_push,
-    MSPhotoController_present
-};
-
 @class MSPhotoItem;
 
-@interface MSPhotoController : UIViewController
+@interface MSPhotoController : UIView
 @property (strong, nonatomic) NSArray <MSPhotoItem *>*photoItems;
 @property (assign, nonatomic) int currentIndex;
-@property (assign, nonatomic) MSPhotoControllerType type;
-
 @end
