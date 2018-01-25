@@ -134,6 +134,7 @@
                     }];
                 } else {
                     [self removeFromSuperview];
+                    self.scrollView.userInteractionEnabled = YES;
                 }
             }
             break;
