@@ -13,6 +13,13 @@
 
 #define padding  20
 
+typedef NS_ENUM(NSInteger, PanGestureDirection) {
+    PanGestureDirectionLeft,
+    PanGestureDirectionRight,
+    PanGestureDirectionTop,
+    PanGestureDirectionBottom
+};
+
 @interface MSPhotoController ()<UIScrollViewDelegate>
 @property (strong, nonatomic) UIScrollView *scrollView;
 @property (strong, nonatomic) UILabel *lbTitle;
@@ -20,6 +27,7 @@
 
 @property (strong, nonatomic) UIPanGestureRecognizer *panGesture;
 @property (assign, nonatomic) BOOL isAction;
+@property (assign, nonatomic) PanGestureDirection direction;
 @property (strong, nonatomic) UIImageView *currentImageView;
 @property (strong, nonatomic) UIImageView *imageHud;;
 @property (assign, nonatomic) CGRect origialFrame;
@@ -78,10 +86,53 @@
     CGPoint translationP = [panGes translationInView:self];
     CGPoint velocityP = [panGes velocityInView:self];
     CGPoint locationP = [panGes locationInView:self];
-    
     switch (panGes.state) {
         case UIGestureRecognizerStateBegan:
         {
+            
+            if (translationP.y >= 0 && velocityP.y > 0) {
+                if (ABS(translationP.x) <= ABS(translationP.y)) {
+                    self.direction = PanGestureDirectionBottom;
+                } else if (translationP.x <= 0 && velocityP.x < 0) {
+                    self.direction = PanGestureDirectionLeft;
+                } else {
+                    self.direction = PanGestureDirectionRight;
+                }
+            } else {
+                if (ABS(translationP.x) <= ABS(translationP.y)) {
+                    self.direction = PanGestureDirectionTop;
+                } else if (translationP.x <= 0 && velocityP.x < 0) {
+                    self.direction = PanGestureDirectionLeft;
+                } else {
+                    self.direction = PanGestureDirectionRight;
+                }
+            }
+            
+            switch (self.direction) {
+                case PanGestureDirectionLeft:
+                {
+                    NSLog(@"向左");
+                    break;
+                }
+                case PanGestureDirectionRight:
+                {
+                    NSLog(@"向右");
+                    break;
+                }
+                case PanGestureDirectionTop:
+                {
+                    NSLog(@"向上");
+                    break;
+                }
+                case PanGestureDirectionBottom:
+                {
+                    NSLog(@"向下");
+                    break;
+                }
+                default:
+                    break;
+            }
+            
             self.isAction = (translationP.y >= 0 && velocityP.y > 0);
             if (self.isAction) {
                 int index = _scrollView.contentOffset.x / _scrollView.bounds.size.width;
@@ -114,6 +165,9 @@
                 self.imageHud.height = self.currentImageView.height * self.scale;
                 self.imageHud.center = CGPointMake(self.currentImageView.centerX + (locationP.x - self.startPoint.x)*0.8, self.currentImageView.centerY + (locationP.y - self.startPoint.y)*0.8);
                 
+                self.btnSave.hidden = YES;
+                self.lbTitle.hidden = YES;
+                
             }
             break;
         }
@@ -127,6 +181,8 @@
                     [UIView animateWithDuration:0.25 animations:^{
                         self.imageHud.frame = self.origialFrame;
                         self.scrollView.alpha = 1;
+                        self.btnSave.hidden = NO;
+                        self.lbTitle.hidden = NO;
                     } completion:^(BOOL finished) {
                         self.currentImageView.hidden = NO;
                         [self.imageHud removeFromSuperview];
