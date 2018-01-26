@@ -38,7 +38,7 @@ typedef NS_ENUM(NSInteger, PanGestureDirection) {
 @end
 
 @implementation MSPhotoController
-
+#pragma mark - life
 - (instancetype)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
@@ -76,6 +76,28 @@ typedef NS_ENUM(NSInteger, PanGestureDirection) {
     }];
 }
 
+#pragma mark - public
+- (void)setPhotoItems:(NSArray<MSPhotoItem *> *)photoItems {
+    _photoItems = photoItems;
+    self.scrollView.contentSize = CGSizeMake(self.photoItems.count * self.scrollView.frame.size.width, 0);
+    for (int i = 0; i < self.photoItems.count; i++) {
+        MSPhotoItem *photoItem = self.photoItems[i];
+        MSPhotoView *photoView = [[MSPhotoView alloc] initWithFrame:CGRectMake(i * (self.frame.size.width + padding) + padding/2.0, 0, self.frame.size.width, self.frame.size.height)];
+        photoView.photoItem = photoItem;
+        [self.scrollView addSubview:photoView];
+        photoView.singleTapBlock = ^(UIGestureRecognizer *recognizer){
+            [self removeFromSuperview];
+        };
+    }
+}
+
+- (void)setCurrentIndex:(int)currentIndex {
+    _currentIndex = currentIndex;
+    self.lbTitle.text = [NSString stringWithFormat:@"%d/%lu",self.currentIndex+1,(unsigned long)self.photoItems.count];
+    [self.scrollView setContentOffset:CGPointMake(self.currentIndex * self.scrollView.frame.size.width, 0) animated:NO];
+}
+
+#pragma mark - private
 - (UIPanGestureRecognizer *)panGesture {
     if (!_panGesture) {
         _panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(pan:)];
@@ -135,11 +157,15 @@ typedef NS_ENUM(NSInteger, PanGestureDirection) {
                     break;
             }
             
+            int index = _scrollView.contentOffset.x / _scrollView.bounds.size.width;
+            MSPhotoView *currentView = _scrollView.subviews[index];
+            if (!currentView.hasLoadedImage) {
+                self.isAction = NO;
+                return;
+            }
+            
             self.isAction = (translationP.y >= 0 && velocityP.y > 0);
             if (self.isAction) {
-                
-                int index = _scrollView.contentOffset.x / _scrollView.bounds.size.width;
-                MSPhotoView *currentView = _scrollView.subviews[index];
                 self.currentImageView = currentView.imageView;
                 self.currentImageViewSuperView = currentView.imageView.superview;
                 self.origialFrame = currentView.imageView.frame;
@@ -225,26 +251,6 @@ typedef NS_ENUM(NSInteger, PanGestureDirection) {
     [self.btnSave setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [self.btnSave addTarget:self action:@selector(saveImage) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:self.btnSave];
-}
-
-- (void)setPhotoItems:(NSArray<MSPhotoItem *> *)photoItems {
-    _photoItems = photoItems;
-    self.scrollView.contentSize = CGSizeMake(self.photoItems.count * self.scrollView.frame.size.width, 0);
-    for (int i = 0; i < self.photoItems.count; i++) {
-        MSPhotoItem *photoItem = self.photoItems[i];
-        MSPhotoView *photoView = [[MSPhotoView alloc] initWithFrame:CGRectMake(i * (self.frame.size.width + padding) + padding/2.0, 0, self.frame.size.width, self.frame.size.height)];
-        photoView.photoItem = photoItem;
-        [self.scrollView addSubview:photoView];
-        photoView.singleTapBlock = ^(UIGestureRecognizer *recognizer){
-            [self removeFromSuperview];
-        };
-    }
-}
-
-- (void)setCurrentIndex:(int)currentIndex {
-    _currentIndex = currentIndex;
-    self.lbTitle.text = [NSString stringWithFormat:@"%d/%lu",self.currentIndex+1,(unsigned long)self.photoItems.count];
-    [self.scrollView setContentOffset:CGPointMake(self.currentIndex * self.scrollView.frame.size.width, 0) animated:NO];
 }
 
 - (void)saveImage

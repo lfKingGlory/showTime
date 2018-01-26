@@ -16,6 +16,7 @@
 #import "MSPhotoController.h"
 #import "MSPhotoItem.h"
 #import <AudioToolbox/AudioToolbox.h>
+#import "SDImageCache.h"
 
 @interface MSViewController2 ()<MSGestureViewDelegate, UITextViewDelegate>
 @property (assign, nonatomic) BOOL statusBarStyleControl;
@@ -119,17 +120,6 @@
     NSLog(@"textViewDidChange===========%@",textView.text);
 }
 
-
-
-
-
-
-
-
-
-
-
-
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
@@ -169,6 +159,8 @@
     NSLog(@"%@",passWord);
     if ([passWord isEqualToString:@"1245"]) {
         self.gesView.gestureViewType = MSGestureView_normal;
+        [[SDImageCache sharedImageCache] clearDisk];
+        [[SDImageCache sharedImageCache] clearMemory];
     }else{
         AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
         self.gesView.gestureViewType = MSGestureView_error;

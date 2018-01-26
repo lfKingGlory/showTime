@@ -12,6 +12,7 @@
 @interface MSPhotoView : UIView
 @property (nonatomic, strong) void (^singleTapBlock)(UITapGestureRecognizer *recognizer);
 @property (nonatomic, assign) BOOL beginLoadingImage;
+@property (assign, nonatomic) BOOL hasLoadedImage;
 @property (strong, nonatomic) MSPhotoItem *photoItem;
 @property (strong, nonatomic) UIImageView *imageView;
 - (void)setImageWithURL:(NSURL *)url placeholderImage:(UIImage *)placeholder;

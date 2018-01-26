@@ -19,7 +19,6 @@
 
 @property (nonatomic,strong) UITapGestureRecognizer *doubleTap;
 @property (nonatomic,strong) UITapGestureRecognizer *singleTap;
-@property (assign, nonatomic) BOOL hasLoadedImage;
 
 @end
 
@@ -138,13 +137,17 @@
 
 - (void)adjustFrameWithImage:(UIImage *)image
 {
-    CGFloat imageViewHeight = self.frame.size.width * (image.size.height / image.size.width);
-    if (imageViewHeight > self.frame.size.height) {
-        self.imageView.frame = CGRectMake(0, 0, self.frame.size.width, imageViewHeight);
-    }else{
-        self.imageView.frame = CGRectMake(0, (self.frame.size.height - imageViewHeight) / 2.0, self.frame.size.width, imageViewHeight);
-    }
-    self.scrollView.contentSize = self.imageView.frame.size;
+    [UIView animateWithDuration:0.75 delay:0 usingSpringWithDamping:0.75 initialSpringVelocity:0.1 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+        CGFloat imageViewHeight = self.frame.size.width * (image.size.height / image.size.width);
+        if (imageViewHeight > self.frame.size.height) {
+            self.imageView.frame = CGRectMake(0, 0, self.frame.size.width, imageViewHeight);
+        }else{
+            self.imageView.frame = CGRectMake(0, (self.frame.size.height - imageViewHeight) / 2.0, self.frame.size.width, imageViewHeight);
+        }
+    } completion:^(BOOL finished) {
+        self.scrollView.contentSize = self.imageView.frame.size;
+    }];
+    
 }
 
 - (void)handleDoubleTap:(UITapGestureRecognizer *)recognizer
