@@ -327,10 +327,4 @@ typedef NS_ENUM(NSInteger, PanGestureDirection) {
     }
     
 }
-
-- (BOOL)prefersStatusBarHidden
-{
-    return YES;
-}
-
 @end

@@ -96,7 +96,9 @@
 
 - (void)reset
 {
-    [self.scrollView setZoomScale:1.0 animated:YES];
+    if (self.scrollView.zoomScale != 1) {
+        [self.scrollView setZoomScale:1.0 animated:YES];
+    }
 }
 
 - (void)setImageWithURL:(NSURL *)url placeholderImage:(UIImage *)placeholder
