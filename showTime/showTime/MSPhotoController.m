@@ -26,11 +26,13 @@ typedef NS_ENUM(NSInteger, PanGestureDirection) {
 @property (strong, nonatomic) UIButton *btnSave;
 
 @property (strong, nonatomic) UIPanGestureRecognizer *panGesture;
-@property (assign, nonatomic) BOOL isAction;
 @property (assign, nonatomic) PanGestureDirection direction;
+@property (assign, nonatomic) BOOL isAction;
+
 @property (strong, nonatomic) UIImageView *currentImageView;
-@property (strong, nonatomic) UIImageView *imageHud;;
+@property (strong, nonatomic) UIView *currentImageViewSuperView;
 @property (assign, nonatomic) CGRect origialFrame;
+@property (assign, nonatomic) CGRect newFrame;
 @property (assign, nonatomic) CGPoint startPoint;
 @property (assign, nonatomic) CGFloat scale;
 @end
@@ -68,7 +70,7 @@ typedef NS_ENUM(NSInteger, PanGestureDirection) {
 - (void)removeFromSuperview {
     [UIView animateWithDuration:0.25 animations:^{
         self.scrollView.alpha = 0;
-        self.imageHud.y = self.height;
+        self.currentImageView.y = self.height;
     } completion:^(BOOL finished) {
         [super removeFromSuperview];
     }];
@@ -135,17 +137,18 @@ typedef NS_ENUM(NSInteger, PanGestureDirection) {
             
             self.isAction = (translationP.y >= 0 && velocityP.y > 0);
             if (self.isAction) {
+                
                 int index = _scrollView.contentOffset.x / _scrollView.bounds.size.width;
                 MSPhotoView *currentView = _scrollView.subviews[index];
                 self.currentImageView = currentView.imageView;
-                self.currentImageView.hidden = YES;
-
-                self.origialFrame = [currentView convertRect:currentView.imageView.frame toView:self];
-                self.imageHud = [[UIImageView alloc] initWithFrame:self.origialFrame];
-                self.imageHud.image = currentView.imageView.image;
-                [self addSubview:self.imageHud];
-                self.scrollView.userInteractionEnabled = NO;
+                self.currentImageViewSuperView = currentView.imageView.superview;
+                self.origialFrame = currentView.imageView.frame;
+                self.newFrame = [currentView convertRect:currentView.imageView.frame toView:self];
                 
+                [self addSubview:self.currentImageView];
+                self.currentImageView.frame = self.newFrame;
+                
+                self.scrollView.userInteractionEnabled = NO;
                 self.startPoint = locationP;
             }
             break;
@@ -161,9 +164,12 @@ typedef NS_ENUM(NSInteger, PanGestureDirection) {
                     self.scale = 1;
                 }
                 self.scrollView.alpha = self.scale;
-                self.imageHud.width = self.currentImageView.width * self.scale;
-                self.imageHud.height = self.currentImageView.height * self.scale;
-                self.imageHud.center = CGPointMake(self.currentImageView.centerX + (locationP.x - self.startPoint.x)*0.8, self.currentImageView.centerY + (locationP.y - self.startPoint.y)*0.8);
+                self.currentImageView.width = self.newFrame.size.width * self.scale;
+                self.currentImageView.height = self.newFrame.size.height * self.scale;
+                
+                CGFloat centerX = self.newFrame.origin.x+self.newFrame.size.width/2.0 + (locationP.x - self.startPoint.x)*0.8;
+                CGFloat centerY = self.newFrame.origin.y+self.newFrame.size.height/2.0 + (locationP.y - self.startPoint.y)*0.8;
+                self.currentImageView.center = CGPointMake(centerX, centerY);
                 
                 self.btnSave.hidden = YES;
                 self.lbTitle.hidden = YES;
@@ -179,13 +185,13 @@ typedef NS_ENUM(NSInteger, PanGestureDirection) {
                 self.isAction = NO;
                 if (self.scale >= 0.6) {
                     [UIView animateWithDuration:0.25 animations:^{
-                        self.imageHud.frame = self.origialFrame;
+                        self.currentImageView.frame = self.newFrame;
                         self.scrollView.alpha = 1;
                         self.btnSave.hidden = NO;
                         self.lbTitle.hidden = NO;
                     } completion:^(BOOL finished) {
-                        self.currentImageView.hidden = NO;
-                        [self.imageHud removeFromSuperview];
+                        self.currentImageView.frame = self.origialFrame;
+                        [self.currentImageViewSuperView addSubview:self.currentImageView];
                         self.scrollView.userInteractionEnabled = YES;
                     }];
                 } else {
