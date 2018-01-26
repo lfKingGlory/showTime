@@ -21,6 +21,9 @@ typedef NS_ENUM(NSInteger, PanGestureDirection) {
 };
 
 @interface MSPhotoController ()<UIScrollViewDelegate>
+@property (strong, nonatomic) NSArray <MSPhotoItem *>*photoItems;
+@property (assign, nonatomic) int currentIndex;
+
 @property (strong, nonatomic) UIScrollView *scrollView;
 @property (strong, nonatomic) UILabel *lbTitle;
 @property (strong, nonatomic) UIButton *btnSave;
@@ -77,9 +80,10 @@ typedef NS_ENUM(NSInteger, PanGestureDirection) {
 }
 
 #pragma mark - public
-- (void)setPhotoItems:(NSArray<MSPhotoItem *> *)photoItems {
+- (void)updateWithPhotoItems:(NSArray<MSPhotoItem *> *)photoItems currentIndex:(int)currentIndex {
     _photoItems = photoItems;
-    self.scrollView.contentSize = CGSizeMake(self.photoItems.count * self.scrollView.frame.size.width, 0);
+    _currentIndex = currentIndex;
+    
     for (int i = 0; i < self.photoItems.count; i++) {
         MSPhotoItem *photoItem = self.photoItems[i];
         MSPhotoView *photoView = [[MSPhotoView alloc] initWithFrame:CGRectMake(i * (self.frame.size.width + padding) + padding/2.0, 0, self.frame.size.width, self.frame.size.height)];
@@ -89,12 +93,9 @@ typedef NS_ENUM(NSInteger, PanGestureDirection) {
             [self removeFromSuperview];
         };
     }
-}
-
-- (void)setCurrentIndex:(int)currentIndex {
-    _currentIndex = currentIndex;
-    self.lbTitle.text = [NSString stringWithFormat:@"%d/%lu",self.currentIndex+1,(unsigned long)self.photoItems.count];
+    self.scrollView.contentSize = CGSizeMake(self.photoItems.count * self.scrollView.frame.size.width, 0);
     [self.scrollView setContentOffset:CGPointMake(self.currentIndex * self.scrollView.frame.size.width, 0) animated:NO];
+    self.lbTitle.text = [NSString stringWithFormat:@"%d/%lu",self.currentIndex+1,(unsigned long)self.photoItems.count];
 }
 
 #pragma mark - private
@@ -256,9 +257,23 @@ typedef NS_ENUM(NSInteger, PanGestureDirection) {
 - (void)saveImage
 {
     int index = _scrollView.contentOffset.x / _scrollView.bounds.size.width;
-    
     MSPhotoView *currentView = _scrollView.subviews[index];
-    
+    if (!currentView.hasLoadedImage) {
+        UILabel *label = [[UILabel alloc] init];
+        label.textColor = [UIColor whiteColor];
+        label.backgroundColor = [UIColor colorWithRed:0.1f green:0.1f blue:0.1f alpha:0.90f];
+        label.layer.cornerRadius = 5;
+        label.clipsToBounds = YES;
+        label.bounds = CGRectMake(0, 0, 150, 40);
+        label.center = self.center;
+        label.text = @"正在加载图片...";
+        label.textAlignment = NSTextAlignmentCenter;
+        label.font = [UIFont boldSystemFontOfSize:17];
+        [[[UIApplication sharedApplication].delegate window] addSubview:label];
+        [[[UIApplication sharedApplication].delegate window] bringSubviewToFront:label];
+        [label performSelector:@selector(removeFromSuperview) withObject:nil afterDelay:1.0];
+        return;
+    }
     UIImageWriteToSavedPhotosAlbum(currentView.imageView.image, self, @selector(image:didFinishSavingWithError:contextInfo:), NULL);
 }
 
@@ -272,7 +287,7 @@ typedef NS_ENUM(NSInteger, PanGestureDirection) {
     label.bounds = CGRectMake(0, 0, 150, 40);
     label.center = self.center;
     label.textAlignment = NSTextAlignmentCenter;
-    label.font = [UIFont boldSystemFontOfSize:20];
+    label.font = [UIFont boldSystemFontOfSize:17];
     [[[UIApplication sharedApplication].delegate window] addSubview:label];
     [[[UIApplication sharedApplication].delegate window] bringSubviewToFront:label];
     if (error) {

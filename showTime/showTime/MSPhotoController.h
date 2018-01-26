@@ -10,6 +10,5 @@
 @class MSPhotoItem;
 
 @interface MSPhotoController : UIView
-@property (strong, nonatomic) NSArray <MSPhotoItem *>*photoItems;
-@property (assign, nonatomic) int currentIndex;
+- (void)updateWithPhotoItems:(NSArray <MSPhotoItem *>*)photoItems currentIndex:(int)currentIndex;
 @end

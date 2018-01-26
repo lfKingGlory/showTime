@@ -137,8 +137,7 @@
         item.thumbnail_pic = self.srcStringArray[i];
         [arr addObject:item];
     }
-    vc.photoItems = arr;
-    vc.currentIndex = 3;
+    [vc updateWithPhotoItems:arr currentIndex:3];
     [[UIApplication sharedApplication].delegate.window addSubview:vc];
 
     if (!self.time) {
