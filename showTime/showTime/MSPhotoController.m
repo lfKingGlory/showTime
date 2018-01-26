@@ -156,7 +156,7 @@ typedef NS_ENUM(NSInteger, PanGestureDirection) {
                 self.scale = 1;
                 if (locationP.y - self.startPoint.y > 0) {
                     self.scale = ABS(locationP.y - self.startPoint.y) / self.frame.size.height;
-                    self.scale = (1 - self.scale) > 0.2 ? (1 - self.scale) : 0.2;
+                    self.scale = MAX(1 - self.scale, 0.2);
                 } else {
                     self.scale = 1;
                 }
