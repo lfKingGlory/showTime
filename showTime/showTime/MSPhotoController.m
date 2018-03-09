@@ -111,6 +111,7 @@ typedef NS_ENUM(NSInteger, PanGestureDirection) {
     CGPoint translationP = [panGes translationInView:self];
     CGPoint velocityP = [panGes velocityInView:self];
     CGPoint locationP = [panGes locationInView:self];
+    MSPhotoView *currentView;
     switch (panGes.state) {
         case UIGestureRecognizerStateBegan:
         {
@@ -159,7 +160,7 @@ typedef NS_ENUM(NSInteger, PanGestureDirection) {
             }
             
             int index = _scrollView.contentOffset.x / _scrollView.bounds.size.width;
-            MSPhotoView *currentView = _scrollView.subviews[index];
+            currentView = _scrollView.subviews[index];
             if (!currentView.hasLoadedImage) {
                 self.isAction = NO;
                 return;
@@ -190,13 +191,15 @@ typedef NS_ENUM(NSInteger, PanGestureDirection) {
                 } else {
                     self.scale = 1;
                 }
+                CGFloat factor = 0.8;
                 self.scrollView.alpha = self.scale;
                 self.currentImageView.width = self.newFrame.size.width * self.scale;
                 self.currentImageView.height = self.newFrame.size.height * self.scale;
-                
-                CGFloat centerX = self.newFrame.origin.x+self.newFrame.size.width/2.0 + (locationP.x - self.startPoint.x)*0.8;
-                CGFloat centerY = self.newFrame.origin.y+self.newFrame.size.height/2.0 + (locationP.y - self.startPoint.y)*0.8;
-                self.currentImageView.center = CGPointMake(centerX, centerY);
+                CGFloat x = (self.newFrame.size.width - self.currentImageView.width)/2.0;
+                CGFloat y = self.newFrame.origin.y + (locationP.y - self.startPoint.y)*factor;
+                self.currentImageView.x = x;
+                self.currentImageView.y = y;
+                self.currentImageView.centerY += (locationP.y - self.startPoint.y)*factor;
                 
                 self.btnSave.hidden = YES;
                 self.lbTitle.hidden = YES;

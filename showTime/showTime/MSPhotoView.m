@@ -10,8 +10,35 @@
 #import "MSLoadingView.h"
 #import "UIImageView+WebCache.h"
 
+@interface MBScrollView : UIScrollView
+@end
+@implementation MBScrollView
+- (BOOL)isScrollViewOnTopOrBottom {
+    CGPoint translation = [self.panGestureRecognizer translationInView:self];
+    if (translation.y >= 0 && self.contentOffset.y <= 0) {
+        return YES;
+    }
+//    CGFloat maxOffsetY = floor(self.contentSize.height - self.bounds.size.height);
+//    if (translation.y < 0 && self.contentOffset.y >= maxOffsetY) {
+//        return YES;
+//    }
+    return NO;
+}
+#pragma mark - GestureRecognizerDelegate
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer {
+    if (gestureRecognizer == self.panGestureRecognizer) {
+        if (gestureRecognizer.state == UIGestureRecognizerStatePossible) {
+            if ([self isScrollViewOnTopOrBottom]) {
+                return NO;
+            }
+        }
+    }
+    return YES;
+}
+@end
+
 @interface MSPhotoView ()<UIScrollViewDelegate, UIGestureRecognizerDelegate>
-@property (strong, nonatomic) UIScrollView *scrollView;
+@property (strong, nonatomic) MBScrollView *scrollView;
 @property (strong, nonatomic) MSLoadingView *loadingView;
 @property (nonatomic, strong) UIButton *reloadButton;
 @property (nonatomic, strong) NSURL *imageUrl;
@@ -39,7 +66,7 @@
 
 - (void)addSubviews
 {
-    self.scrollView = [[UIScrollView alloc] initWithFrame:self.bounds];
+    self.scrollView = [[MBScrollView alloc] initWithFrame:self.bounds];
     self.scrollView.backgroundColor = [UIColor clearColor];
     self.scrollView.showsHorizontalScrollIndicator = NO;
     self.scrollView.delegate = self;
@@ -143,8 +170,10 @@
         CGFloat imageViewHeight = self.frame.size.width * (image.size.height / image.size.width);
         if (imageViewHeight > self.frame.size.height) {
             self.imageView.frame = CGRectMake(0, 0, self.frame.size.width, imageViewHeight);
+            self.isLongImage = YES;
         }else{
             self.imageView.frame = CGRectMake(0, (self.frame.size.height - imageViewHeight) / 2.0, self.frame.size.width, imageViewHeight);
+            self.isLongImage = NO;
         }
     } completion:^(BOOL finished) {
         self.scrollView.contentSize = self.imageView.frame.size;

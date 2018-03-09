@@ -15,6 +15,7 @@
 @property (assign, nonatomic) BOOL hasLoadedImage;
 @property (strong, nonatomic) MSPhotoItem *photoItem;
 @property (strong, nonatomic) UIImageView *imageView;
+@property (assign, nonatomic) BOOL isLongImage;
 - (void)setImageWithURL:(NSURL *)url placeholderImage:(UIImage *)placeholder;
 - (void)reset;
 @end
